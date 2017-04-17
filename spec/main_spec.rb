@@ -18,8 +18,8 @@ describe "Elastic Search setup" do
     if ANSIBLE_VARS.fetch('elasticsearch_cluster_name', false)
       its(:content) { should include("cluster.name: #{ANSIBLE_VARS.fetch('elasticsearch_cluster_name', 'FAIL')}") }
     end
-    if ANSIBLE_VARS.fetch('elasticsearch_groovy_sandbox', false)
-      its(:content) { should include("script.groovy.sandbox.enabled: true") }
+    if ANSIBLE_VARS.fetch('elasticsearch_groovy_inline_aggs', false)
+      its(:content) { should include("script.engine.groovy.inline.aggs: true") }
     end
     ANSIBLE_VARS.fetch('elasticsearch_allowed_scripting_actions', []).each do |action|
       its(:content) { should include("script.#{action}: on") }

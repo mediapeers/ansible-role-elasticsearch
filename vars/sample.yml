@@ -23,6 +23,6 @@ elasticsearch_misc_query_bool_max_clause_count: 4096
 elasticsearch_misc_disable_delete_all_indices: "true"
 elasticsearch_java_opts: "-XX:-UseSuperWord"
 
-elasticsearch_groovy_sandbox: true
+elasticsearch_groovy_inline_aggs: true
 elasticsearch_allowed_scripting_actions:
   - search
