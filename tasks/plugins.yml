@@ -37,6 +37,8 @@
     chdir={{ elasticsearch_home_dir }}
   when: item.url is defined
   with_items: '{{ elasticsearch_plugins }}'
+  ignore_errors: true
+  # have to ignore errors here as plugin scripts returns non zero when checksums are missing
 
 # Install AWS Plugin (see https://github.com/elasticsearch/elasticsearch-cloud-aws)
 # The following variables need to be defined in your playbook or inventory:
