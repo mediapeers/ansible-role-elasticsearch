@@ -40,7 +40,7 @@
 - name: Check whether we have aleady installed the same version
   shell: if [ -e /usr/share/elasticsearch/lib/elasticsearch-{{ elasticsearch_version }}.jar ]; then echo yes; else echo no; fi;
   register: version_exists
-  always_run: True
+  check_mode: no
 
 - name: Download Elasticsearch deb if needed
   get_url:
