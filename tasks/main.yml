@@ -144,8 +144,6 @@
 - include: custom-jars.yml
   when: elasticsearch_custom_jars is defined
 
-# Install Marvel Plugin
-
 # Configure Elasticsearch Node
 - name: Configuring Elasticsearch Node
   template:

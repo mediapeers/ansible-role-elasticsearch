@@ -385,7 +385,7 @@ indices.recovery.concurrent_streams: {{ elasticsearch_recovery_concurrent_stream
 
 ################################## Discovery ##################################
 
-{% if elasticsearch_plugin_aws_version is defined %}
+{% if elasticsearch_aws_disovery | bool %}
 
 discovery.type: ec2
 {% if elasticsearch_plugin_aws_ec2_groups is defined %}
@@ -395,6 +395,9 @@ discovery.ec2.groups: '{{ elasticsearch_plugin_aws_ec2_groups }}'
 discovery.ec2.ping_timeout: {{ elasticsearch_plugin_aws_ec2_ping_timeout}}
 {% endif %}
 cloud.node.auto_attributes: true
+{% endif %}
+{%  if (elasticsearch_aws_s3 | bool) ||  (elasticsearch_aws_disovery | bool) %}
+
 {% if elasticsearch_plugin_aws_access_key is defined %}
 {% if elasticsearch_plugin_aws_secret_key is defined %}
 cloud.aws.access_key: '{{ elasticsearch_plugin_aws_access_key }}'

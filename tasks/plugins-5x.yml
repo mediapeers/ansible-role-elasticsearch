@@ -11,19 +11,19 @@
 # bin/elasticsearch-plugin install <plugin url>
 
 # Cleanup installed plugins first
-- name: (ES 5.x mode) Determining which plugins are installed
+- name: (ES 5.x mode) Determining which plugins are already installed
   shell: '{{ elasticsearch_home_dir }}/bin/elasticsearch-plugin list'
   register: elasticsearch_installed_plugins
 
-- name: Output installed plugins
+- name: Output already installed plugins
   debug:
-    msg: "{{ elasticsearch_installed_plugins.stdout | list }}"
+    msg: "{{ elasticsearch_installed_plugins.stdout_lines }}"
 
-- name: (ES 5.x mode) Removing Plugins if they exist
+- name: (ES 5.x mode) Removing already installed plugins
   shell: bin/elasticsearch-plugin remove {{ item }}
   args:
     chdir: '{{ elasticsearch_home_dir }}'
-  with_items: '{{ elasticsearch_installed_plugins.stdout | list }}'
+  with_items: '{{ elasticsearch_installed_plugins.stdout_lines }}'
 
 # Loop through elasticsearch_plugins and install them
 - name: (ES 5.x mode) Installing Plugins by Name (use for official plugins within the elasticsearch repo)
@@ -64,11 +64,11 @@
 
 # List installed plugins
 - name: Get installed plugins
-  shell: bin/elasticsearc-plugin list
-  register: elasticsearch_plugin_list
+  shell: bin/elasticsearch-plugin list
   args:
     chdir: "{{ elasticsearch_home_dir }}"
+  register: elasticsearch_plugin_list
 
 - name: Output installed ES 5.x plugins
   debug:
-    msg: "{{ elasticsearch_plugin_list.stdout }}"
+    msg: "{{ elasticsearch_plugin_list.stdout_lines }}"
