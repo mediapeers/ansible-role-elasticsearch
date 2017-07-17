@@ -129,9 +129,16 @@
     line: 'session    required   pam_limits.so'
   notify: Restart Elasticsearch
 
-# Install Plugins with ES => 2.0
-- include: plugins.yml
-  when: elasticsearch_version | version_compare('2.0', '>=')
+# Install Plugins with ES 2.0 - 2.4 (ES version 5.0 follows 2.4)
+- include: plugins-2x.yml
+  when:
+    - elasticsearch_version | version_compare('2.0', '>=')
+    - elasticsearch_version | version_compare('5.0', '<')
+
+# Install Plugins with ES >= 5.0
+- include: plugins-5x.yml
+  when:
+    - elasticsearch_version | version_compare('5.0', '>=')
 
 # Install custom JARs
 - include: custom-jars.yml

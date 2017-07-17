@@ -1,0 +1,62 @@
+# Install Elasticsearch Plugins (works only with the plugin script from ES => 5.0.0)
+# You will need to define an array called 'elasticsearch_plugins' in your playbook or inventory, such that:
+#
+# elasticsearch_plugins:
+#  - { name: '<plugin name>', url: '<[optional] plugin url>' }
+#  - ...
+# where if you were to install the plugin via bin/elasticsearch-plugin, you would type:
+#
+# bin/elasticsearch-plugin install <plugin name>
+# or
+# bin/elasticsearch-plugin install <plugin url>
+
+# Cleanup installed plugins first
+- name: (ES 5.x mode) Determining which plugins are installed
+  shell: '{{ elasticsearch_home_dir }}/bin/elasticsearch-plugin list | grep -E " - [[:alnum:]_-]+"'
+  register: elasticsearch_installed_plugins
+
+- name: (ES 5.x mode) Removing Plugins if they exist
+  shell: bin/elasticsearch-plugin remove {{ item }}
+  args:
+    chdir: '{{ elasticsearch_home_dir }}'
+  when: "'No plugin' not in item"
+  with_items: '{{ elasticsearch_installed_plugins.stdout | from_yaml }}'
+
+# Install AWS Plugin (see https://github.com/elasticsearch/elasticsearch-cloud-aws)
+# The following variables need to be defined in your playbook or inventory:
+# - elasticsearch_plugin_aws_version
+#
+# The following variables provide a for now limited configuration for the plugin.
+# More options may be available in the future.
+# (see http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-discovery-ec2.html):
+# - elasticsearch_plugin_aws_ec2_groups
+# - elasticsearch_plugin_aws_ec2_ping_timeout
+# - elasticsearch_plugin_aws_access_key
+# - elasticsearch_plugin_aws_secret_key
+# - elasticsearch_plugin_aws_region
+
+- name: (ES 5.x mode) Installing AWS Plugin
+  shell: bin/elasticsearch-plugin install cloud-aws
+  args:
+    chdir: '{{ elasticsearch_home_dir }}'
+  when: (elasticsearch_plugin_aws_version is defined)
+
+# Fix permissions
+- name: Fix plugin file permission
+  file:
+    path: "{{ elasticsearch_plugin_dir }}"
+    state: directory
+    owner: "{{ elasticsearch_user }}"
+    group: "{{ elasticsearch_group }}"
+    recurse: yes
+
+# List installed plugins
+- name: Get installed plugins
+  shell: bin/elasticsearc-plugin list
+  register: elasticsearch_plugin_list
+  args:
+    chdir: "{{ elasticsearch_home_dir }}"
+
+- name: Output installed ES 5.x plugins
+  debug:
+    msg: "{{ elasticsearch_plugin_list.stdout }}"
