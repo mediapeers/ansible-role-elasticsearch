@@ -12,34 +12,46 @@
 
 # Cleanup installed plugins first
 - name: (ES 5.x mode) Determining which plugins are installed
-  shell: '{{ elasticsearch_home_dir }}/bin/elasticsearch-plugin list | grep -E " - [[:alnum:]_-]+"'
+  shell: '{{ elasticsearch_home_dir }}/bin/elasticsearch-plugin list'
   register: elasticsearch_installed_plugins
+
+- name: Output installed plugins
+  debug:
+    msg: "{{ elasticsearch_installed_plugins.stdout | list }}"
 
 - name: (ES 5.x mode) Removing Plugins if they exist
   shell: bin/elasticsearch-plugin remove {{ item }}
   args:
     chdir: '{{ elasticsearch_home_dir }}'
-  when: "'No plugin' not in item"
-  with_items: '{{ elasticsearch_installed_plugins.stdout | from_yaml }}'
+  with_items: '{{ elasticsearch_installed_plugins.stdout | list }}'
 
-# Install AWS Plugin (see https://github.com/elasticsearch/elasticsearch-cloud-aws)
-# The following variables need to be defined in your playbook or inventory:
-# - elasticsearch_plugin_aws_version
-#
-# The following variables provide a for now limited configuration for the plugin.
-# More options may be available in the future.
-# (see http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-discovery-ec2.html):
-# - elasticsearch_plugin_aws_ec2_groups
-# - elasticsearch_plugin_aws_ec2_ping_timeout
-# - elasticsearch_plugin_aws_access_key
-# - elasticsearch_plugin_aws_secret_key
-# - elasticsearch_plugin_aws_region
-
-- name: (ES 5.x mode) Installing AWS Plugin
-  shell: bin/elasticsearch-plugin install cloud-aws
+# Loop through elasticsearch_plugins and install them
+- name: (ES 5.x mode) Installing Plugins by Name (use for official plugins within the elasticsearch repo)
+  shell: bin/elasticsearch-plugin install -bs {{ item.name }}
   args:
     chdir: '{{ elasticsearch_home_dir }}'
-  when: (elasticsearch_plugin_aws_version is defined)
+  when: item.url is undefined
+  with_items: '{{ elasticsearch_plugins }}'
+
+- name: (ES 5.x mode) Installing Plugins by URL (use for 3rd party plugins)
+  shell: bin/elasticsearch-plugin install -bs {{ item.url }}
+  args:
+    chdir: '{{ elasticsearch_home_dir }}'
+  when: item.url is defined
+  with_items: '{{ elasticsearch_plugins }}'
+
+# Install AWS Plugins (make sure you provide further config vars for AWS credentials/settings)
+- name: (ES 5.x mode) Installing AWS EC2 discovery Plugin
+  shell: bin/elasticsearch-plugin install -bs discovery-ec2
+  args:
+    chdir: '{{ elasticsearch_home_dir }}'
+  when: elasticsearch_aws_disovery
+
+- name: (ES 5.x mode) Installing AWS EC2 discovery Plugin
+  shell: bin/elasticsearch-plugin install -bs repository-s3
+  args:
+    chdir: '{{ elasticsearch_home_dir }}'
+  when: elasticsearch_aws_s3
 
 # Fix permissions
 - name: Fix plugin file permission

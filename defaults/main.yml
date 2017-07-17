@@ -23,7 +23,27 @@ elasticsearch_service_startonboot: yes
 #elasticsearch_http_cors_enabled: "false"
 elasticsearch_service_state: started
 
+# To install ES plugings define an array
+# called 'elasticsearch_plugins' in your playbook
+# or inventory, in this pattern:
+#
+# elasticsearch_plugins:
+#  - { name: '<plugin name>', url: '<[optional] plugin url>' }
+#  - ...
 elasticsearch_plugins: []
+
+# Set either one to true for installing AWS plugins:
+elasticsearch_aws_s3: false
+elasticsearch_aws_disovery: false
+# The following variables provide configuration for the AWS plugins.
+# See https://www.elastic.co/guide/en/elasticsearch/plugins/current/discovery-ec2-usage.html
+# and https://www.elastic.co/guide/en/elasticsearch/plugins/current/repository-s3-usage.html
+# - elasticsearch_plugin_aws_ec2_groups
+# - elasticsearch_plugin_aws_ec2_ping_timeout
+# - elasticsearch_plugin_aws_access_key
+# - elasticsearch_plugin_aws_secret_key
+# - elasticsearch_plugin_aws_region
+
 
 # Set the following to copy maintainance script to ES machine
 # elasticsearch_scripts_dir: /home/ubuntu
