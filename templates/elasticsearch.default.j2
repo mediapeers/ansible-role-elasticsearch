@@ -10,7 +10,7 @@ ES_GROUP={{ elasticsearch_group }}
 
 # Heap Size (defaults to 256m min, 1g max)
 #ES_HEAP_SIZE=2g
-{% if elasticsearch_heap_size is defined && elasticsearch_version|version_compare('5.0', '<') %}
+{% if (elasticsearch_heap_size is defined) and (elasticsearch_version|version_compare('5.0', '<')) %}
 ES_HEAP_SIZE={{ elasticsearch_heap_size }}
 {% endif %}
 
