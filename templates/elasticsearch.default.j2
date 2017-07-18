@@ -9,6 +9,7 @@ ES_GROUP={{ elasticsearch_group }}
 {% endif %}
 
 # Heap Size (defaults to 256m min, 1g max)
+# For ElasticSearch 5 and newer configure JVM params in /etc/elasticsearch/jvm.options instead!
 #ES_HEAP_SIZE=2g
 {% if (elasticsearch_heap_size is defined) and (elasticsearch_version|version_compare('5.0', '<')) %}
 ES_HEAP_SIZE={{ elasticsearch_heap_size }}
@@ -21,7 +22,7 @@ ES_HEAP_SIZE={{ elasticsearch_heap_size }}
 #ES_DIRECT_SIZE=
 
 # Maximum number of open files, defaults to 65535.
-#MAX_OPEN_FILES=65535
+#MAX_OPEN_FILES=65536
 {% if elasticsearch_max_open_files is defined %}
 MAX_OPEN_FILES={{ elasticsearch_max_open_files }}
 {% endif %}

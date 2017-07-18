@@ -12,7 +12,7 @@ elasticsearch_apt_dependencies:
   - ntp
   - unzip
 elasticsearch_network_host: 0.0.0.0 # makes elasticsearch reachable from public network interfaces
-elasticsearch_max_open_files: 65535
+elasticsearch_max_open_files: 65538
 elasticsearch_heap_size: 1g # set to a finetuned value when running ES in production!
 elasticsearch_home_dir: /usr/share/elasticsearch
 elasticsearch_plugin_dir: /usr/share/elasticsearch/plugins
