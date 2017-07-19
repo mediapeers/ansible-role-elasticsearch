@@ -26,10 +26,6 @@ describe "Elastic Search setup" do
     end
   end
 
-  describe file('/etc/elasticsearch/logging.yml') do
-    it { should be_file }
-  end
-
   describe file('/usr/share/elasticsearch/plugins/') do
     it { should be_directory }
   end
@@ -38,7 +34,7 @@ describe "Elastic Search setup" do
     its(:content) { should include("cluster.name: #{ANSIBLE_VARS.fetch('elasticsearch_cluster_name', 'FAIL')}") }
   end
 
-  context "AWS plugin vars set", if: ANSIBLE_VARS.fetch('elasticsearch_plugin_aws_version', false) do
+  context "AWS plugin vars set", if: ANSIBLE_VARS.fetch('elasticsearch_aws_discovery', false) do
     describe file('/usr/share/elasticsearch/plugins/cloud-aws/') do
       it { should be_directory }
     end
@@ -50,7 +46,7 @@ describe "Elastic Search setup" do
     end
   end
 
-  context "No AWS plugin vars set", if: !ANSIBLE_VARS.fetch('elasticsearch_plugin_aws_version', false) do
+  context "No AWS plugin vars set", if: !ANSIBLE_VARS.fetch('elasticsearch_aws_discovery', false) do
     describe file('/usr/share/elasticsearch/plugins/cloud-aws/') do
       it { should_not exist }
     end
