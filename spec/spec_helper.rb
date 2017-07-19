@@ -12,7 +12,7 @@ INSIDE_ROLE=true
 # Getting the ansible variables from included vars_files and
 # playbook vars to be usable in the tests
 vars_files = ["defaults/main.yml"]
-playbook_vars = YAML.load_file("tests/test.yml").first["vars"]
+playbook_vars = YAML.load_file("tests/#{ENV['SITE']}").first["vars"]
 
 if vars_files
   ansible_vars = {}

@@ -13,6 +13,7 @@ elasticsearch_apt_dependencies:
 elasticsearch_network_host: 0.0.0.0 # makes elasticsearch reachable from public network interfaces
 elasticsearch_max_open_files: 65538
 elasticsearch_heap_size: 1g # set to a finetuned value when running ES in production!
+# Not all path variables will be used in ES 5 mode:
 elasticsearch_home_dir: /usr/share/elasticsearch
 elasticsearch_plugin_dir: /usr/share/elasticsearch/plugins
 elasticsearch_log_dir: /var/log/elasticsearch
