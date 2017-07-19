@@ -57,7 +57,7 @@ node.ingest: {{ elasticsearch_node_ingest }}
 {% if (elasticsearch_node_master is defined) or (elasticsearch_node_data is defined) %}
 {% if (elasticsearch_node_master == false) and (elasticsearch_node_data == false) %}
 search.remote.connect: false
-{% endig %}
+{% endif %}
 
 # Add custom attributes to the node:
 #
