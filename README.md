@@ -109,10 +109,6 @@ Example playbook, with minimal set of variables defined:
    # Your tasks
 ```
 
-When installing newer ES versions (>2.4) also override download url like this:
-
-`elasticsearch_download_url: "https://artifacts.elastic.co/downloads/elasticsearch"`
-
 
 # Dependencies
 No other Ansible roles.

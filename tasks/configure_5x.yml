@@ -1,0 +1,28 @@
+# Configure Elasticsearch Node in ElasticSearch 5.x mode
+
+- name: Configuring Elasticsearch 5.x node
+  template:
+    src: elasticsearch-5.yml.j2
+    dest: '{{ elasticsearch_conf_dir }}/elasticsearch.yml'
+    owner: '{{ elasticsearch_user }}'
+    group: '{{ elasticsearch_group }}'
+    mode: 0644
+  notify: Restart Elasticsearch
+
+- name: Configure ElasticSearch 5.x default file
+  template:
+    src: elasticsearch.default-5.j2
+    dest: /etc/default/elasticsearch
+    owner: '{{ elasticsearch_user }}'
+    group: '{{ elasticsearch_group }}'
+    mode: 0644
+  notify: Restart Elasticsearch
+
+- name: Configure jvm.options file
+  template:
+    src: jvm.options.j2
+    dest: /etc/elasticsearch/jvm.options
+    owner: '{{ elasticsearch_user }}'
+    group: '{{ elasticsearch_group }}'
+    mode: 0644
+  notify: Restart Elasticsearch

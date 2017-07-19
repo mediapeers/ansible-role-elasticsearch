@@ -42,6 +42,18 @@
   register: version_exists
   check_mode: no
 
+- set_fact:
+    elasticsearch_download_url: 'https://download.elasticsearch.org/elasticsearch/elasticsearch'
+  when:
+    - elasticsearch_download_url is undefined
+    - elasticsearch_version | version_compare('5.0', '<')
+
+- set_fact:
+    elasticsearch_download_url: 'https://artifacts.elastic.co/downloads/elasticsearch'
+  when:
+    - elasticsearch_download_url is undefined
+    - elasticsearch_version | version_compare('5.0', '>=')
+
 - name: Download Elasticsearch deb if needed
   get_url:
     url: '{{ elasticsearch_download_url }}/elasticsearch-{{ elasticsearch_version }}.deb'
@@ -133,35 +145,12 @@
 - include: custom-jars.yml
   when: elasticsearch_custom_jars is defined
 
-# Configure Elasticsearch Node
-- name: Configuring Elasticsearch Node
-  template:
-    src: elasticsearch.yml.j2
-    dest: '{{ elasticsearch_conf_dir }}/elasticsearch.yml'
-    owner: '{{ elasticsearch_user }}'
-    group: '{{ elasticsearch_group }}'
-    mode: 0644
-  when: elasticsearch_conf_dir is defined
-  notify: Restart Elasticsearch
+# Configure Elasticsearch Node, depending on version
+- include: configure_2x.yml
+  when: elasticsearch_version | version_compare('5.0', '<')
 
-- name: Configure elasticsearch default file
-  template:
-    src: elasticsearch.default.j2
-    dest: /etc/default/elasticsearch
-    owner: '{{ elasticsearch_user }}'
-    group: '{{ elasticsearch_group }}'
-    mode: 0644
-  notify: Restart Elasticsearch
-
-- name: Configure jvm.options file for ES >= 5.0 (no longer uses default file for JVM options)
-  template:
-    src: jvm.options.j2
-    dest: /etc/elasticsearch/jvm.options
-    owner: '{{ elasticsearch_user }}'
-    group: '{{ elasticsearch_group }}'
-    mode: 0644
+- include: configure_5x.yml
   when: elasticsearch_version | version_compare('5.0', '>=')
-  notify: Restart Elasticsearch
 
 # Install Plugins with ES 2.0 - 2.4 (ES version 5.0 follows 2.4)
 - include: plugins-2x.yml
