@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-
 es_version = ANSIBLE_VARS.fetch('elasticsearch_version', '2.0.0')
 es_major_version = es_version[0].to_i
 es_aws_discovery = ANSIBLE_VARS.fetch('elasticsearch_aws_discovery', false)
@@ -19,7 +18,13 @@ describe "Elastic Search setup" do
     it { should be_enabled }
   end
 
-  context "Version 2.x configuration", if: es_major_version == 2 do
+  describe file('/usr/share/elasticsearch/') do
+    it { should be_directory }
+  end
+end
+
+if es_major_version == 2
+  describe "Version 2.x configuration" do
     describe file('/etc/elasticsearch/elasticsearch.yml') do
       it { should be_file }
       if ANSIBLE_VARS.fetch('elasticsearch_cluster_name', false)
@@ -70,8 +75,10 @@ describe "Elastic Search setup" do
       end
     end
   end
+end
 
-  context "Version 5.x configuration", if: es_major_version == 5 do
+if es_major_version == 5
+  describe "Version 5.x configuration" do
     describe file('/etc/elasticsearch/elasticsearch.yml') do
       it { should be_file }
       its(:content) { should include("cluster.name: #{ANSIBLE_VARS.fetch('elasticsearch_cluster_name', 'FAIL')}") }
