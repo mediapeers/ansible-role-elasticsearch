@@ -15,7 +15,7 @@ This is an Ansible role for [Elasticsearch](http://www.elasticsearch.org/).
 ### Configuring AWS EC2 / S3 plugin
 The following variables need to be defined in your playbook or inventory:
 
-- elasticsearch_aws_disovery: true
+- elasticsearch_aws_discovery: true
 For just installing the s3 plugin in ES >= 5.x, for snapshot repo use:
 - elasticsearch_aws_s3: true
 

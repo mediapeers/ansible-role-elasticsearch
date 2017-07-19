@@ -35,7 +35,7 @@ elasticsearch_plugins: []
 
 # Set either one to true for installing AWS plugins:
 elasticsearch_aws_s3: false
-elasticsearch_aws_disovery: false
+elasticsearch_aws_discovery: false
 # The following variables provide configuration for the AWS plugins.
 # See https://www.elastic.co/guide/en/elasticsearch/plugins/current/discovery-ec2-usage.html
 # and https://www.elastic.co/guide/en/elasticsearch/plugins/current/repository-s3-usage.html

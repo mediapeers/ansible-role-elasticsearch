@@ -47,7 +47,7 @@
     chdir: '{{ elasticsearch_home_dir }}'
   when:
     - elasticsearch_aws_s3
-    - elasticsearch_aws_disovery
+    - elasticsearch_aws_discovery
 
 # Install Marvel (see http://www.elasticsearch.org/guide/en/marvel/current/)
 #
