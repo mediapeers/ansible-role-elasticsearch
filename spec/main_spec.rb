@@ -19,7 +19,7 @@ describe "Elastic Search setup" do
     it { should be_enabled }
   end
 
-  context "Version 2.x configuration", if es_major_version == 2 do
+  context "Version 2.x configuration", if: es_major_version == 2 do
     describe file('/etc/elasticsearch/elasticsearch.yml') do
       it { should be_file }
       if ANSIBLE_VARS.fetch('elasticsearch_cluster_name', false)
@@ -71,12 +71,10 @@ describe "Elastic Search setup" do
     end
   end
 
-  context "Version 5.x configuration", if es_major_version == 5 do
+  context "Version 5.x configuration", if: es_major_version == 5 do
     describe file('/etc/elasticsearch/elasticsearch.yml') do
       it { should be_file }
-      if ANSIBLE_VARS.fetch('elasticsearch_cluster_name', false)
-        its(:content) { should include("cluster.name: #{ANSIBLE_VARS.fetch('elasticsearch_cluster_name', 'FAIL')}") }
-      end
+      its(:content) { should include("cluster.name: #{ANSIBLE_VARS.fetch('elasticsearch_cluster_name', 'FAIL')}") }
     end
 
     describe file('/etc/default/elasticsearch') do
