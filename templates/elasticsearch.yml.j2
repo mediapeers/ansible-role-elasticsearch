@@ -385,7 +385,7 @@ indices.recovery.concurrent_streams: {{ elasticsearch_recovery_concurrent_stream
 
 ################################## Discovery ##################################
 
-{% if elasticsearch_plugin_aws_version is defined %}
+{% if elasticsearch_aws_discovery | bool %}
 
 discovery.type: ec2
 {% if elasticsearch_plugin_aws_ec2_groups is defined %}
@@ -395,11 +395,13 @@ discovery.ec2.groups: '{{ elasticsearch_plugin_aws_ec2_groups }}'
 discovery.ec2.ping_timeout: {{ elasticsearch_plugin_aws_ec2_ping_timeout}}
 {% endif %}
 cloud.node.auto_attributes: true
-{% if elasticsearch_plugin_aws_access_key is defined %}
-{% if elasticsearch_plugin_aws_secret_key is defined %}
+
+{% endif %}
+{% if (elasticsearch_aws_s3 | bool) or (elasticsearch_aws_discovery | bool) %}
+
+{% if (elasticsearch_plugin_aws_access_key is defined) and (elasticsearch_plugin_aws_secret_key is defined) %}
 cloud.aws.access_key: '{{ elasticsearch_plugin_aws_access_key }}'
 cloud.aws.secret_key: '{{ elasticsearch_plugin_aws_secret_key }}'
-{% endif %}
 {% endif %}
 {% if elasticsearch_plugin_aws_region is defined %}
 cloud.aws.region: {{ elasticsearch_plugin_aws_region}}
@@ -558,26 +560,6 @@ monitor.jvm.gc.ConcurrentMarkSweep.debug: {{ elasticsearch_gc_soncurrent_mark_sw
 {% endif %}
 
 ################################### Varia #####################################
-
-{% if elasticsearch_plugin_marvel_version is defined %}
-
-{% if elasticsearch_plugin_marvel_agent_exporter_es_index_timeformat is defined %}
-marvel.agent.exporter.es.index.timeformat: {{ elasticsearch_plugin_marvel_agent_exporter_es_index_timeformat }}
-{% endif %}
-{% if elasticsearch_plugin_marvel_agent_interval is defined %}
-marvel.agent.interval: {{ elasticsearch_plugin_marvel_agent_interval }}
-{% endif %}
-{% if elasticsearch_plugin_marvel_agent_indices is defined %}
-marvel.agent.indices: {{ elasticsearch_plugin_marvel_agent_indices }}
-{% endif %}
-{% if elasticsearch_plugin_marvel_agent_exporter_es_hosts is defined %}
-marvel.agent.exporter.es.hosts: {{ elasticsearch_plugin_marvel_agent_exporter_es_hosts }}
-{% endif %}
-{% if elasticsearch_plugin_marvel_agent_enabled is defined %}
-marvel.agent.enabled: {{ elasticsearch_plugin_marvel_agent_enabled }}
-{% endif %}
-
-{% endif %}
 
 {% if elasticsearch_misc_auto_create_index is defined %}
 action.auto_create_index: {{ elasticsearch_misc_auto_create_index }}

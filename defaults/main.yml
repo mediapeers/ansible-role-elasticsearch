@@ -3,7 +3,6 @@
 
 elasticsearch_user: elasticsearch
 elasticsearch_group: elasticsearch
-elasticsearch_download_url: https://download.elasticsearch.org/elasticsearch/elasticsearch
 elasticsearch_version: 2.3.3
 elasticsearch_apt_repos:
   - 'ppa:webupd8team/java'
@@ -12,7 +11,9 @@ elasticsearch_apt_dependencies:
   - ntp
   - unzip
 elasticsearch_network_host: 0.0.0.0 # makes elasticsearch reachable from public network interfaces
-elasticsearch_max_open_files: 65535
+elasticsearch_max_open_files: 65538
+elasticsearch_heap_size: 1g # set to a finetuned value when running ES in production!
+# Not all path variables will be used in ES 5 mode:
 elasticsearch_home_dir: /usr/share/elasticsearch
 elasticsearch_plugin_dir: /usr/share/elasticsearch/plugins
 elasticsearch_log_dir: /var/log/elasticsearch
@@ -23,7 +24,27 @@ elasticsearch_service_startonboot: yes
 #elasticsearch_http_cors_enabled: "false"
 elasticsearch_service_state: started
 
+# To install ES plugings define an array
+# called 'elasticsearch_plugins' in your playbook
+# or inventory, in this pattern:
+#
+# elasticsearch_plugins:
+#  - { name: '<plugin name>', url: '<[optional] plugin url>' }
+#  - ...
 elasticsearch_plugins: []
+
+# Set either one to true for installing AWS plugins:
+elasticsearch_aws_s3: false
+elasticsearch_aws_discovery: false
+# The following variables provide configuration for the AWS plugins.
+# See https://www.elastic.co/guide/en/elasticsearch/plugins/current/discovery-ec2-usage.html
+# and https://www.elastic.co/guide/en/elasticsearch/plugins/current/repository-s3-usage.html
+# - elasticsearch_plugin_aws_ec2_groups
+# - elasticsearch_plugin_aws_ec2_ping_timeout
+# - elasticsearch_plugin_aws_access_key
+# - elasticsearch_plugin_aws_secret_key
+# - elasticsearch_plugin_aws_region
+
 
 # Set the following to copy maintainance script to ES machine
 # elasticsearch_scripts_dir: /home/ubuntu

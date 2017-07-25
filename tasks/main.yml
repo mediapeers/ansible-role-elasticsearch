@@ -42,6 +42,18 @@
   register: version_exists
   check_mode: no
 
+- set_fact:
+    elasticsearch_download_url: 'https://download.elasticsearch.org/elasticsearch/elasticsearch'
+  when:
+    - elasticsearch_download_url is undefined
+    - elasticsearch_version | version_compare('5.0', '<')
+
+- set_fact:
+    elasticsearch_download_url: 'https://artifacts.elastic.co/downloads/elasticsearch'
+  when:
+    - elasticsearch_download_url is undefined
+    - elasticsearch_version | version_compare('5.0', '>=')
+
 - name: Download Elasticsearch deb if needed
   get_url:
     url: '{{ elasticsearch_download_url }}/elasticsearch-{{ elasticsearch_version }}.deb'
@@ -129,38 +141,27 @@
     line: 'session    required   pam_limits.so'
   notify: Restart Elasticsearch
 
-# Install Plugins with ES => 2.0
-- include: plugins.yml
-  when: elasticsearch_version | version_compare('2.0', '>=')
-
-# Install Plugins with ES < 2.0
-- include: plugins_old.yml
-  when: elasticsearch_version | version_compare('2.0', '<')
-
 # Install custom JARs
 - include: custom-jars.yml
   when: elasticsearch_custom_jars is defined
 
-# Install Marvel Plugin
+# Configure Elasticsearch Node, depending on version
+- include: configure_2x.yml
+  when: elasticsearch_version | version_compare('5.0', '<')
 
-# Configure Elasticsearch Node
-- name: Configuring Elasticsearch Node
-  template:
-    src: elasticsearch.yml.j2
-    dest: '{{ elasticsearch_conf_dir }}/elasticsearch.yml'
-    owner: '{{ elasticsearch_user }}'
-    group: '{{ elasticsearch_group }}'
-    mode: 0644
-  when: elasticsearch_conf_dir is defined
-  notify: Restart Elasticsearch
+- include: configure_5x.yml
+  when: elasticsearch_version | version_compare('5.0', '>=')
 
-- template:
-    src: elasticsearch.default.j2
-    dest: /etc/default/elasticsearch
-    owner: '{{ elasticsearch_user }}'
-    group: '{{ elasticsearch_group }}'
-    mode: 0644
-  notify: Restart Elasticsearch
+# Install Plugins with ES 2.0 - 2.4 (ES version 5.0 follows 2.4)
+- include: plugins-2x.yml
+  when:
+    - elasticsearch_version | version_compare('2.0', '>=')
+    - elasticsearch_version | version_compare('5.0', '<')
+
+# Install Plugins with ES >= 5.0
+- include: plugins-5x.yml
+  when:
+    - elasticsearch_version | version_compare('5.0', '>=')
 
 # Register Elasticsearch service to start on boot
 - name: Ensure Elasticsearch is started on boot

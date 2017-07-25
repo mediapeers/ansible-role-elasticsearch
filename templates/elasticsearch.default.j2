@@ -9,6 +9,7 @@ ES_GROUP={{ elasticsearch_group }}
 {% endif %}
 
 # Heap Size (defaults to 256m min, 1g max)
+# For ElasticSearch 5 and newer configure JVM params in /etc/elasticsearch/jvm.options instead!
 #ES_HEAP_SIZE=2g
 {% if elasticsearch_heap_size is defined %}
 ES_HEAP_SIZE={{ elasticsearch_heap_size }}

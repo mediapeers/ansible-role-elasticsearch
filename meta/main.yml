@@ -1,14 +1,24 @@
 ---
-# Elasticsearch Ansible Meta
 galaxy_info:
-  author: "George Stathis, Stefan Horning"
-  company: Mediapeers
-  license: MIT
+  author: Stefan Horning
+  description: Role to install and setup ElasticSearch server
+  company: Mediapeers GmbH
+  license: BSD
   min_ansible_version: 1.8
+  github_branch: master
   platforms:
-   - name: Ubuntu
-     versions:
-      - precise
-  categories:
-   - database:nosql
+    - name: Ubuntu
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - all
+  galaxy_tags:
+    - elasticsearch
+    - server
+    - linux
+    - ubuntu
+    - search-engine
+    - search
+    - cluster
 dependencies: []

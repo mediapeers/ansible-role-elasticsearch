@@ -1,0 +1,20 @@
+# Configure Elasticsearch Node in ElasticSearch 2.x mode
+
+- name: Configuring Elasticsearch 2.x node
+  template:
+    src: elasticsearch.yml.j2
+    dest: '{{ elasticsearch_conf_dir }}/elasticsearch.yml'
+    owner: '{{ elasticsearch_user }}'
+    group: '{{ elasticsearch_group }}'
+    mode: 0644
+  when: elasticsearch_conf_dir is defined
+  notify: Restart Elasticsearch
+
+- name: Configure Elasticsearch 2.x default file
+  template:
+    src: elasticsearch.default.j2
+    dest: /etc/default/elasticsearch
+    owner: '{{ elasticsearch_user }}'
+    group: '{{ elasticsearch_group }}'
+    mode: 0644
+  notify: Restart Elasticsearch
