@@ -1,6 +1,23 @@
 ---
 # Elasticsearch Ansible Tasks
 
+# Information outputs
+- name: Install following ElasticSearch version
+  debug:
+    var: elasticsearch_version
+
+- name: Plugin vars info output
+  debug:
+    var: elasticsearch_plugins
+- debug:
+    var: elasticsearch_aws_s3
+- debug:
+    var: elasticsearch_aws_discovery
+
+- name: Heap size info
+  debug:
+    var: elasticsearch_heap_size
+
 # Preparations and dependency installs
 - name: Configuring timezone
   shell: echo {{ elasticsearch_timezone }} > /etc/timezone; dpkg-reconfigure --frontend noninteractive tzdata
