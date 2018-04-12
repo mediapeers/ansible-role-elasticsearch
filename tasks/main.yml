@@ -170,24 +170,24 @@
   notify: Restart Elasticsearch
 
 # Install custom JARs
-- include: custom-jars.yml
+- include_tasks: custom-jars.yml
   when: elasticsearch_custom_jars is defined
 
 # Configure Elasticsearch Node, depending on version
-- include: configure_2x.yml
+- include_tasks: configure_2x.yml
   when: elasticsearch_version | version_compare('5.0', '<')
 
-- include: configure_5x.yml
+- include_tasks: configure_5x.yml
   when: elasticsearch_version | version_compare('5.0', '>=')
 
 # Install Plugins with ES 2.0 - 2.4 (ES version 5.0 follows 2.4)
-- include: plugins-2x.yml
+- include_tasks: plugins-2x.yml
   when:
     - elasticsearch_version | version_compare('2.0', '>=')
     - elasticsearch_version | version_compare('5.0', '<')
 
 # Install Plugins with ES >= 5.0
-- include: plugins-5x.yml
+- include_tasks: plugins-5x.yml
   when:
     - elasticsearch_version | version_compare('5.0', '>=')
 
