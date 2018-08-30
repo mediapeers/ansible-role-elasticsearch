@@ -1,10 +1,8 @@
 ---
-sudo: required
-dist: trusty
-group: deprecated-2017Q2
 
+sudo: required
+dist: xenial
 language: python
-python: "2.7"
 
 env:
   - SITE=test.yml
@@ -12,17 +10,10 @@ env:
 
 before_install:
   - sudo apt-get update -qq
-  # Clean up all the weird rubies (none coming from apt packages) from system
-  - sudo rm /usr/bin/ruby /usr/bin/gem
 
 install:
-  # Setup ruby 2.0 for root
-  - sudo apt-get install -y ruby2.0
-  - sudo ln -s /usr/bin/ruby2.0 /usr/bin/ruby
-  - sudo ln -s /usr/bin/gem2.0 /usr/bin/gem
-  - sudo ln -s /usr/bin/rake2.0 /usr/bin/rake
-
-  # Install serverspec as root
+  # Setup ruby and serverspec as root
+  - sudo apt-get install -y ruby
   - sudo ruby -v
   - sudo gem install serverspec
 
