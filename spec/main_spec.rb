@@ -128,3 +128,18 @@ if es_major_version == 5
     end
   end
 end
+
+if es_major_version == 6
+  describe "Version 6.x configuration" do
+    describe file('/etc/elasticsearch/elasticsearch.yml') do
+      it { should be_file }
+      its(:content) { should include("cluster.name: #{ANSIBLE_VARS.fetch('elasticsearch_cluster_name', 'FAIL')}") }
+    end
+  end
+
+  context "AWS s3 plugin enabled", if: es_aws_s3 do
+    describe file('/usr/share/elasticsearch/plugins/repository-s3/') do
+      it { should be_directory }
+    end
+  end
+end
