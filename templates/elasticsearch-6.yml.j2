@@ -96,6 +96,15 @@ discovery.zen.minimum_master_nodes: {{ elasticsearch_discovery_zen_minimum_maste
 
 # For more information, consult the zen discovery module documentation.
 
+# To use other discovery provider then zen use host_provider setting
+#
+#discovery.zen.hosts_provider: ec2
+{% if elasticsearch_aws_discovery | bool %}
+discovery.zen.hosts_provider: ec2
+{% endif %}
+
+# all EC2 discovery plugin settings are stored in elasticsearch-keystore with ES 6.x
+
 # ---------------------------------- Gateway -----------------------------------
 #
 # Block initial recovery after a full cluster restart until N nodes are started:

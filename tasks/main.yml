@@ -185,10 +185,16 @@
     - elasticsearch_version | version_compare('2.0', '>=')
     - elasticsearch_version | version_compare('5.0', '<')
 
-# Install Plugins with ES 5.x and 6.x
+# Install Plugins with ES 5.x
 - include_tasks: plugins_5x.yml
   when:
     - elasticsearch_version | version_compare('5.0', '>=')
+    - elasticsearch_version | version_compare('6.0', '<')
+
+# Install Plugins with ES 6.x
+- include_tasks: plugins_6x.yml
+  when:
+    - elasticsearch_version | version_compare('6.0', '>=')
 
 # Register Elasticsearch service to start on boot
 - name: Ensure Elasticsearch is started on boot
