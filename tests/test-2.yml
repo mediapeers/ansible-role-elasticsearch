@@ -3,7 +3,7 @@
   become: true
   vars:
     elasticsearch_version: 2.3.3
-    elasticsearch_cluster_name: my-test-cluster
+    elasticsearch_cluster_name: my-test-cluster-2
     elasticsearch_aws_discovery: true
     elasticsearch_plugin_aws_access_key: abc123
     elasticsearch_plugin_aws_secret_key: abcXYZ123

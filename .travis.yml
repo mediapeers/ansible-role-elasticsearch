@@ -5,8 +5,9 @@ dist: xenial
 language: python
 
 env:
-  - SITE=test.yml
+  - SITE=test-2.yml
   - SITE=test-5.yml
+  - SITE=test-6.yml
 
 before_install:
   - sudo apt-get update -qq
