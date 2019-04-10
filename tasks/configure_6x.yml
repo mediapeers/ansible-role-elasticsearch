@@ -1,0 +1,28 @@
+# Configure Elasticsearch Node in ElasticSearch 6.x mode
+
+- name: Configuring Elasticsearch 6.x node
+  template:
+    src: elasticsearch-6.yml.j2
+    dest: '{{ elasticsearch_conf_dir }}/elasticsearch.yml'
+    owner: root
+    group: '{{ elasticsearch_group }}'
+    mode: 0660
+  notify: Restart Elasticsearch
+
+- name: Configure ElasticSearch 6.x default file
+  template:
+    src: elasticsearch.default-6.j2
+    dest: /etc/default/elasticsearch
+    owner: root
+    group: '{{ elasticsearch_group }}'
+    mode: 0660
+  notify: Restart Elasticsearch
+
+- name: Configure jvm.options file
+  template:
+    src: jvm.options.j2
+    dest: /etc/elasticsearch/jvm.options
+    owner: root
+    group: '{{ elasticsearch_group }}'
+    mode: 0660
+  notify: Restart Elasticsearch

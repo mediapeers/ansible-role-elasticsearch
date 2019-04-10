@@ -178,16 +178,21 @@
   when: elasticsearch_version | version_compare('5.0', '<')
 
 - include_tasks: configure_5x.yml
-  when: elasticsearch_version | version_compare('5.0', '>=')
+  when:
+    - elasticsearch_version | version_compare('5.0', '>=')
+    - elasticsearch_version | version_compare('6.0', '<')
+
+- include_tasks: configure_6x.yml
+  when: elasticsearch_version | version_compare('6.0', '>=')
 
 # Install Plugins with ES 2.0 - 2.4 (ES version 5.0 follows 2.4)
-- include_tasks: plugins-2x.yml
+- include_tasks: plugins_2x.yml
   when:
     - elasticsearch_version | version_compare('2.0', '>=')
     - elasticsearch_version | version_compare('5.0', '<')
 
-# Install Plugins with ES >= 5.0
-- include_tasks: plugins-5x.yml
+# Install Plugins with ES 5.x and 6.x
+- include_tasks: plugins_5x.yml
   when:
     - elasticsearch_version | version_compare('5.0', '>=')
 
