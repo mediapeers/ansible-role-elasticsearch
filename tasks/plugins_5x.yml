@@ -14,6 +14,7 @@
 - name: (ES 5.x/6.x mode) Determining which plugins are already installed
   shell: '{{ elasticsearch_home_dir }}/bin/elasticsearch-plugin list'
   register: elasticsearch_installed_plugins
+  changed_when: false
 
 - name: Output already installed plugins
   debug:
@@ -64,10 +65,9 @@
 
 # List installed plugins
 - name: Get installed plugins
-  shell: bin/elasticsearch-plugin list
-  args:
-    chdir: "{{ elasticsearch_home_dir }}"
+  shell: '{{ elasticsearch_home_dir }}/bin/elasticsearch-plugin list'
   register: elasticsearch_plugin_list
+  changed_when: false
 
 - name: Output installed ES 5.x/6.x plugins
   debug:

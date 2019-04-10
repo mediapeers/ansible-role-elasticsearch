@@ -1,5 +1,9 @@
 # Configure Elasticsearch Node in ElasticSearch 2.x mode
 
+- name: Make sure configured config dir exists
+  file: path={{ elasticsearch_conf_dir }} state=directory owner={{ elasticsearch_user }} group={{ elasticsearch_group }} recurse=yes
+  when: elasticsearch_conf_dir is defined
+
 - name: Configuring Elasticsearch 2.x node
   template:
     src: elasticsearch.yml.j2

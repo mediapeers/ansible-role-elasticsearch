@@ -1,5 +1,9 @@
 # Configure Elasticsearch Node in ElasticSearch 6.x mode
 
+- name: Ensure configured config dir exists
+  file: path={{ elasticsearch_conf_dir }} state=directory
+  when: elasticsearch_conf_dir is defined
+
 - name: Configuring Elasticsearch 6.x node
   template:
     src: elasticsearch-6.yml.j2

@@ -15,6 +15,7 @@
 - name: (ES 2.x mode) Determining which plugins are installed
   shell: '{{ elasticsearch_home_dir }}/bin/plugin list | grep -E " - [[:alnum:]_-]+"'
   register: elasticsearch_installed_plugins
+  changed_when: false
 
 - name: (ES 2.x mode) Removing Plugins if they exist
   shell: bin/plugin remove {{ item }}
@@ -58,10 +59,9 @@
 
 # List installed plugins
 - name: Get installed plugins
-  shell: bin/plugin list
+  shell: '{{ elasticsearch_home_dir }}/bin/plugin list'
   register: elasticsearch_plugin_list
-  args:
-    chdir: "{{ elasticsearch_home_dir }}"
+  changed_when: false
 
 - name: Output installed ES 2.x plugins
   debug:
