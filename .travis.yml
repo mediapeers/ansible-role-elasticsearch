@@ -5,8 +5,9 @@ dist: xenial
 language: python
 
 env:
-  - SITE=test.yml
+  - SITE=test-2.yml
   - SITE=test-5.yml
+  - SITE=test-6.yml
 
 before_install:
   - sudo apt-get update -qq
@@ -32,10 +33,10 @@ script:
   - "ansible-playbook -i tests/inventory tests/$SITE --connection=local"
 
   # Run the role/playbook again, checking to make sure it's idempotent.
-  # We allow 8 'changes' for status reads/plugin cleanups.
+  # We allow 6 'changes' for status reads/plugin cleanups.
   - >
     ansible-playbook -i tests/inventory tests/$SITE --connection=local
-    | grep -q 'changed=8.*failed=0'
+    | grep -q 'changed=6.*failed=0'
     && (echo 'Idempotence test: pass' && exit 0)
     || (echo 'Idempotence test: fail' && exit 1)
 

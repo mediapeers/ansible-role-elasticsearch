@@ -14,7 +14,6 @@
 #
 # Use a descriptive name for your cluster:
 #
-#cluster.name: my-application
 {% if elasticsearch_cluster_name is defined %}
 cluster.name: {{ elasticsearch_cluster_name }}
 {% endif %}
@@ -28,54 +27,22 @@ cluster.name: {{ elasticsearch_cluster_name }}
 node.name: {{ elasticsearch_node_name }}
 {% endif %}
 
-# Every node can be configured to allow or deny being eligible as the master,
-# to allow or deny to store the data, or be an ingest node or not.
-# See docs here https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-node.html
-#
-# Allow this node to be eligible as a master node (enabled by default):
-#
-# node.master: true
-{% if elasticsearch_node_master is defined %}
-node.master: {{ elasticsearch_node_master }}
-{% endif %}
-
-# Allow this node to store data (enabled by default):
-#
-# node.data: true
-{% if elasticsearch_node_data is defined %}
-node.data: {{ elasticsearch_node_data }}
-{% endif %}
-
-# Allow this node to to be used for data ingest (enabled by default):
-#
-# node.ingest: true
-{% if elasticsearch_node_ingest is defined %}
-node.ingest: {{ elasticsearch_node_ingest }}
-{% endif %}
-
-# Disallow cross cluster search when node type is ingest or coordination only node
-{% if (elasticsearch_node_master is defined) or (elasticsearch_node_data is defined) %}
-{% if (elasticsearch_node_master == false) and (elasticsearch_node_data == false) %}
-search.remote.connect: false
-{% endif %}
-{% endif %}
-
 # Add custom attributes to the node:
 #
 #node.attr.rack: r1
-#
+
 # ----------------------------------- Paths ------------------------------------
 #
 # Path to directory where to store the data (separate multiple locations by comma):
 #
-#path.data: /path/to/data
+#path.data: /var/lib/elasticsearch
 {% if elasticsearch_data_dir is defined %}
 path.data: {{ elasticsearch_data_dir }}
 {% endif %}
 
 # Path to log files:
 #
-#path.logs: /path/to/logs
+#path.logs: /var/log/elasticsearch
 {% if elasticsearch_log_dir is defined %}
 path.logs: {{ elasticsearch_log_dir }}
 {% endif %}
@@ -101,9 +68,6 @@ path.logs: {{ elasticsearch_log_dir }}
 network.host: {{ elasticsearch_network_bind_host }}
 {% endif %}
 
-# Check allowed values here:
-# https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-network.html#network-interface-values
-#
 # Set a custom port for HTTP:
 #
 #http.port: 9200
@@ -112,7 +76,7 @@ http.port: {{ elasticsearch_network_http_port }}
 {% endif %}
 
 # For more information, consult the network module documentation.
-#
+
 # --------------------------------- Discovery ----------------------------------
 #
 # Pass an initial list of hosts to perform discovery when new node is started:
@@ -134,28 +98,12 @@ discovery.zen.minimum_master_nodes: {{ elasticsearch_discovery_zen_minimum_maste
 
 # To use other discovery provider then zen use host_provider setting
 #
-# discovery.zen.hosts_provider: ec2
+#discovery.zen.hosts_provider: ec2
 {% if elasticsearch_aws_discovery | bool %}
 discovery.zen.hosts_provider: ec2
-
-{% if elasticsearch_aws_discovery_groups is defined  %}
-discovery.ec2.groups: {{ elasticsearch_aws_discovery_groups }}
-{% endif %}
 {% endif %}
 
-# ------ Optional Cloud plugin settings, used for discovery and snapshot storage plugins -------
-#
-# cloud.aws.region: us-east-1
-{% if elasticsearch_plugin_aws_region is defined %}
-cloud.aws.region: {{ elasticsearch_plugin_aws_region}}
-{% endif %}
-
-# cloud.aws.access_key: abc123 # set access key when machine has no IAM role
-# cloud.aws.secret_key: asdasdasdasdasdasdas # set secret key when machine has no IAM role
-{% if (elasticsearch_plugin_aws_access_key is defined) and (elasticsearch_plugin_aws_secret_key is defined) %}
-cloud.aws.access_key: '{{ elasticsearch_plugin_aws_access_key }}'
-cloud.aws.secret_key: '{{ elasticsearch_plugin_aws_secret_key }}'
-{% endif %}
+# all EC2 discovery plugin settings are stored in elasticsearch-keystore with ES 6.x
 
 # ---------------------------------- Gateway -----------------------------------
 #
@@ -167,20 +115,9 @@ gateway.recover_after_nodes: {{ elasticsearch_gateway_recover_after_nodes }}
 {% endif %}
 
 # For more information, consult the gateway module documentation.
-#
+
 # ---------------------------------- Various -----------------------------------
 #
 # Require explicit names when deleting indices:
 #
 #action.destructive_requires_name: true
-{% if elasticsearch_misc_disable_delete_all_indices is defined %}
-action.destructive_requires_name: {{ elasticsearch_misc_disable_delete_all_indices }}
-{% endif %}
-
-# Disable auto creation of indices by first request
-#
-# action.destructive_requires_name: false
-
-{% if elasticsearch_misc_auto_create_index is defined %}
-action.auto_create_index: {{ elasticsearch_misc_auto_create_index }}
-{% endif %}

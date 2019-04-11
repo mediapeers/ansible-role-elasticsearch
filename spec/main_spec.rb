@@ -128,3 +128,42 @@ if es_major_version == 5
     end
   end
 end
+
+if es_major_version == 6
+  describe "Version 6.x configuration" do
+    describe file('/etc/elasticsearch/elasticsearch.yml') do
+      it { should be_file }
+      its(:content) { should include("cluster.name: #{ANSIBLE_VARS.fetch('elasticsearch_cluster_name', 'FAIL')}") }
+    end
+
+    describe file('/etc/default/elasticsearch') do
+      it { should be_file }
+      its(:content) { should include("ES_PATH_CONF=#{ANSIBLE_VARS.fetch('elasticsearch_conf_dir', 'FAIL')}") }
+      its(:content) { should include("MAX_OPEN_FILES=#{ANSIBLE_VARS.fetch('elasticsearch_max_open_files', '65536')}") }
+    end
+
+    describe file('/usr/share/elasticsearch/plugins/') do
+      it { should be_directory }
+    end
+
+    describe file('/var/log/elasticsearch/') do
+      it { should be_directory }
+    end
+
+    context "AWS discovery plugin enabled", if: es_aws_discovery do
+      describe file('/usr/share/elasticsearch/plugins/discovery-ec2/') do
+        it { should be_directory }
+      end
+
+      describe file('/etc/elasticsearch/elasticsearch.yml') do
+        its(:content) { should include("discovery.zen.hosts_provider: ec2") }
+      end
+    end
+
+    context "AWS s3 plugin enabled", if: es_aws_s3 do
+      describe file('/usr/share/elasticsearch/plugins/repository-s3/') do
+        it { should be_directory }
+      end
+    end
+  end
+end
