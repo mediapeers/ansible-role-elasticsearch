@@ -25,6 +25,7 @@
   shell: bin/elasticsearch-plugin remove {{ item }}
   args:
     chdir: '{{ elasticsearch_home_dir }}'
+  when: "not item is match('warning: .*')"
   with_items: '{{ elasticsearch_installed_plugins.stdout_lines }}'
 
 # Loop through elasticsearch_plugins and install them
