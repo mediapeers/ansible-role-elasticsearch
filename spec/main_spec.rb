@@ -6,7 +6,7 @@ es_aws_discovery = ANSIBLE_VARS.fetch('elasticsearch_aws_discovery', false)
 es_aws_s3 = ANSIBLE_VARS.fetch('elasticsearch_aws_s3', false)
 
 describe "Elastic Search setup" do
-  describe package('oracle-java8-installer') do
+  describe package('openjdk-8-jre-headless') do
     it { should be_installed }
   end
 
