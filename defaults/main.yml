@@ -4,9 +4,8 @@
 elasticsearch_user: elasticsearch
 elasticsearch_group: elasticsearch
 elasticsearch_version: 2.3.3
-elasticsearch_apt_repos:
-  - 'ppa:webupd8team/java'
-elasticsearch_apt_java_package: oracle-java8-installer
+elasticsearch_apt_repos: []
+elasticsearch_apt_java_package: openjdk-8-jre-headless
 elasticsearch_apt_dependencies:
   - ntp
   - unzip
@@ -51,4 +50,4 @@ elasticsearch_aws_discovery: false
 
 # Non-Elasticsearch Defaults
 apt_cache_valid_time: 300 # seconds between "apt-get update" calls.
-elasticsearch_install_java: "true"
+elasticsearch_install_java: true
